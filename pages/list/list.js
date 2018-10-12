@@ -2,7 +2,8 @@
 const dayMap = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
 Page({
   data: {
-    weekWeather: []
+    weekWeather: [],
+    city: '杭州市'
   },
 
   onPullDownRefresh(){
@@ -11,18 +12,39 @@ Page({
     })
   },
 
-  onLoad(){
+  onLoad(options){
+    console.log('onload')
+    this.setData({
+      city: options.city
+    })
     this.getAllWeekWeather()
   },
+
+  // onShow(){
+  //   console.log('onshow')
+  // },
+
+  // onReady() {
+  //   console.log('onready')
+  // },
+
+  // onHide() {
+  //   console.log('onhide')
+  // },
+
+  // onUnload() {
+  //   console.log('onunload')
+  // },
 
   getAllWeekWeather(callback){
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/future',
       data: {
         time: new Date().getTime(),
-        city: '杭州市'
+        city: this.data.city
       },
       success: res => {
+        console.log(this.data.city)
         let result = res.data.result
         //console.log(result)
         this.setAllWeekWeather(result)

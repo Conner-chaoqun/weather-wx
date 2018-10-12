@@ -1,19 +1,28 @@
 <view class="weather-wrapper">
+  <button class='location-wrapper' open-type="{{ locationAuthType===1 ? 'openSetting' : ''}}" bindopensetting="onTapLocation" bindtap="onTapLocation" plain="true">
+    <view class='location'>
+      <image class='location-icon' src='/images/location-icon.png'></image>
+      <view class='location-text'>{{city}}</view>
+    </view>
+    <view class='location-tips'>{{locationTipsText}}</view> 
+  </button>
+
   <view class="temp">{{ nowTemp }}</view>
   <view class="weather">{{ nowWeather }}</view>
   <image class="weather-bg" src="{{ nowWeatherImg }}"  mode="scaleToFill"></image>
+
   <view class='day-weather' bindtap='onTapDayWeather'>
     <view class='day-text'>{{todayDate}}</view>
     <view class='temp-text'>{{todayTemp}}</view>
     <image class='arrow-icon' src='/images/arrow.png'></image>
   </view>
 </view>
+
 <view class='timetips'>
   <image class='timetips-icon' src='/images/time-icon.png'></image>
   <view class='timetips-text'>未来24小时天气预测</view>
 </view>
 
- 
 <scroll-view scroll-x style="width: 100%">
   <view class='forecast-list'>
     <view class='forecast-item' wx:for="{{hourlyWeather}}">
