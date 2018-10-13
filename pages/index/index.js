@@ -54,7 +54,7 @@ Page({
         let auth = res.authSetting['scope.userLocation']
         this.setData({
           locationAuthType: auth ? AUTHORIZED : (auth === false) ? UNAUTHORIZED :UNPROMPTED,
-          locationTipsText: auth ? AUTHORIZED_TIPS : (auth === false) ? UNAUTHORIZED_TIPS : UNPROMPTED_TIPS
+          //locationTipsText: auth ? AUTHORIZED_TIPS : (auth === false) ? UNAUTHORIZED_TIPS : UNPROMPTED_TIPS
         })
         if(auth){
           this.getLocationAndWeather()
@@ -185,7 +185,7 @@ Page({
     wx.getLocation({
       success: res => {
         this.setData({
-          locationTipsText: AUTHORIZED_TIPS,
+          //locationTipsText: AUTHORIZED_TIPS,
           locationAuthType: AUTHORIZED
         })
         this.qqmapsdk.reverseGeocoder({
@@ -206,7 +206,7 @@ Page({
       },
       fail: () => {
         this.setData({
-          locationTipsText: UNAUTHORIZED_TIPS,
+          //locationTipsText: UNAUTHORIZED_TIPS,
           locationAuthType: UNAUTHORIZED
         })
       }
