@@ -1,5 +1,15 @@
 // pages/list/list.js
 const dayMap = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+
+const weatherMap = {
+  '晴': 'sunny',
+  '多云': 'cloudy',
+  '阴': 'overcast',
+  '小雨': 'lightrain',
+  '大雨': 'heavryrain',
+  '雪': 'snow'
+}
+
 Page({
   data: {
     weekWeather: [],
@@ -38,15 +48,15 @@ Page({
 
   getAllWeekWeather(callback){
     wx.request({
-      url: 'https://test-miniprogram.com/api/weather/future',
+      url: 'https://free-api.heweather.net/s6/weather',
       data: {
-        time: new Date().getTime(),
-        city: this.data.city
+        location: this.data.city,
+        key: 'HE1812162058071374',
       },
       success: res => {
         console.log(this.data.city)
-        let result = res.data.result
-        //console.log(result)
+        let result = res.data.HeWeather6[0].daily_forecast
+        console.log(result)
         this.setAllWeekWeather(result)
       },
       complete: () => {
@@ -57,15 +67,15 @@ Page({
 
   setAllWeekWeather(result){
     let weekweather = []
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 3; i++) {
       let date = new Date()
       console.log(date.getDay())
       date.setDate(date.getDate() + i)
       weekweather.push({
         day: dayMap[date.getDay()],
         date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-        temp: `${result[i].minTemp}° - ${result[i].maxTemp}°`,
-        iconPath: '/images/' + result[i].weather + '-icon.png',
+        temp: `${result[i].tmp_min}° - ${result[i].tmp_max}°`,
+        iconPath: '/images/' + weatherMap[result[i].cond_txt_d] + '-icon.png',
       })
     }
     weekweather[0].day = '今天'

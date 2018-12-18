@@ -1,19 +1,39 @@
+// const weatherMap = {
+//   'sunny': '晴',
+//   'cloudy': '多云',
+//   'overcast': '阴',
+//   'lightrain': '小雨',
+//   'heavyrain': '大雨',
+//   'snow': '雪'
+// }
+
 const weatherMap = {
-  'sunny': '晴天',
-  'cloudy': '多云',
-  'overcast': '阴',
-  'lightrain': '小雨',
-  'heavyrain': '大雨',
-  'snow': '雪'
+  '晴': 'sunny',
+  '多云': 'cloudy',
+  '阴': 'overcast',
+  '小雨': 'lightrain',
+  '大雨': 'heavryrain',
+  '雪': 'snow'
 }
 
 const weatherColorMap = {
-  'sunny': '#cbeefd',
-  'cloudy': '#deeef6',
-  'overcast': '#c6ced2',
-  'lightrain': '#bdd5e1',
-  'heavyrain': '#c5ccd0',
-  'snow': '#aae1fc'
+  '晴': '#cbeefd',
+  '多云': '#deeef6',
+  '阴': '#c6ced2',
+  '小雨': '#bdd5e1',
+  '大雨': '#c5ccd0',
+  '雪': '#aae1fc'
+}
+
+const lifestyleMap = {
+  'comf': '舒适度指数',
+  'drsg': '穿衣指数',
+  'flu': '感冒指数',
+  'sport': '运动指数',
+  'trav': '旅游指数',
+  'uv': '紫外线指数',
+  'cw': '洗车指数',
+  'air': '空气指数'
 }
 
 const QQMapWX = require('../../libs/qqmap-wx-jssdk.js')
@@ -32,9 +52,10 @@ Page({
     nowTemp: "",
     nowWeather: "",
     nowWeatherImg: '',
+    lifestyle: '',
     hourlyWeather: [],
     todayDate: '',
-    todayTemp: '',
+    todayWind: '',
     city: '杭州市',
     locationTipsText: UNPROMPTED_TIPS,
     locationAuthType: UNPROMPTED
@@ -45,7 +66,7 @@ Page({
     })
   },
   onLoad(){
-    console.log('onload')
+    //console.log('onload')
     this.qqmapsdk = new QQMapWX({
       key: '4J3BZ-A2LRQ-D655L-GEKFP-NUCD2-J3F4U'
     })
@@ -99,18 +120,21 @@ Page({
 
   getNowInfo(callback){
     wx.request({
-      url: 'https://test-miniprogram.com/api/weather/now',
+      url: 'https://free-api.heweather.net/s6/weather',
       data: {
-        city: this.data.city
+        location: this.data.city,
+        key: 'HE1812162058071374',
       },
       header: {
         'content-type': 'application/json' // 默认值
       },
       success: res => {
         console.log(res,this.data.city)
-        let result = res.data.result
+        let result = res.data.HeWeather6[0]
+        console.log(result)
         this.setNow(result)
-        this.setHourlyWeather(result)
+        // this.setHourlyWeather(result)
+        this.setLifeStyle(result)
         this.setToday(result)
       },
       complete: () => {
@@ -120,13 +144,13 @@ Page({
   },
 
   setNow(result){
-    let temp = result.now.temp
-    let weather = result.now.weather
+    let temp = result.now.tmp
+    let weather = result.now.cond_txt
     console.log(temp, weather)
     this.setData({
       nowTemp: temp + '°',
-      nowWeather: weatherMap[weather],
-      nowWeatherImg: '/images/' + weather + '-bg.png',
+      nowWeather: weather,
+      nowWeatherImg: '/images/' + weatherMap[weather] + '-bg.png',
     })
     wx.setNavigationBarColor({
       frontColor: '#000000',
@@ -151,11 +175,26 @@ Page({
     })
   },
 
+  setLifeStyle(result){
+    let life = result.lifestyle
+    let lifeStyle = []
+    for (let i = 0; i < 8; i += 1) {
+      lifeStyle.push({
+        type: lifestyleMap[life[i].type],
+        brf: life[i].brf,
+        iconPath: '/images/' + life[i].type + '.png',
+      })
+    }
+    this.setData({
+      lifeStyle: lifeStyle
+    })
+  },
+
   setToday(result){
     let date = new Date()
     this.setData({
       todayDate: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + '今天',
-      todayTemp: result.today.minTemp + '° - ' + result.today.maxTemp + '°',
+      todayWind: result.now.wind_dir + ' ' + result.now.wind_sc + '级',
     })  
   },
 

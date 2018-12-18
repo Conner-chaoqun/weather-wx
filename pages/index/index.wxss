@@ -89,9 +89,9 @@
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-  width: 120rpx;
   font-size: 36rpx;
   line-height: 42rpx;
+  margin: 30rpx;
 }
 
 .forecast-tiem {
@@ -125,7 +125,7 @@
   opacity: 0.5;
 }
 
-.temp-text {
+.wind-text {
   flex-grow: 1;
   padding-right: 30rpx;
   text-align: right;
